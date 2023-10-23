@@ -5,7 +5,10 @@
 #include <math.h>
 #include <ctype.h>
 #include <gtk/gtkx.h>
+#include <stdlib.h>
 #include "../src/board.h"
+#include "../src/hashkeys.h"
+#include "../src/init.h"
 
 
 GtkWidget *window;
@@ -13,16 +16,13 @@ GtkWidget *fixed1;
 GtkWidget *chessboard;
 GtkBuilder *builder;
 
-Board *board;
+Board board[1];
 
 GtkWidget *squares[64];
 GtkWidget *images[64];
 
 GdkPixbuf *scaled_images[64];
 GdkPixbuf *unscaled_images[64];
-
-
-
 
 static void myCSS(void){
     GtkCssProvider *provider;
@@ -96,20 +96,14 @@ int main(int argc, char *argv[]) {
 
     int i;
 
-    GdkColor white_color;
-    GdkColor black_color;
+    GError *err; 
 
-    gdk_color_parse( "#fad0a0", &white_color );
-    gdk_color_parse( "#a26622", &black_color );
+    allInit();
 
-    GError *err;
-
-    int pieces[64];
-
+    parseFen(START_FEN,board);
+    printBoard(board);
 
     for (i=0; i<64; i++) {
-
-      pieces[i] = wK;
 
       // get the str of squares
 
@@ -152,7 +146,7 @@ int main(int argc, char *argv[]) {
 
       }
 
-      switch (pieces[i]) {
+      switch (board->pieces[SQ120(i)]) {
         case wP:
           unscaled_images[i] = gdk_pixbuf_new_from_file("pieces/wP.svg",&err);
           break;
@@ -195,7 +189,7 @@ int main(int argc, char *argv[]) {
 
       }
 
-      scaled_images[i] = gdk_pixbuf_scale_simple(unscaled_images[i],60,75,GDK_INTERP_NEAREST);
+      scaled_images[i] = gdk_pixbuf_scale_simple(unscaled_images[i],70,75,GDK_INTERP_NEAREST);
       gtk_image_set_from_pixbuf(images[i],scaled_images[i]);
 
     }

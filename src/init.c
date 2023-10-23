@@ -55,13 +55,3 @@ void allInit() {
 	initBitMasks();
 	initHashKeys();
 }
-
-int main(int argc, char *argv[]){
-	allInit();
-	ASSERT(0);
-	U64 bb = 845489562312;
-	SETBIT(bb,2);
-	printf("%d",countBits(bb));
-	printBitBoard(bb);
-	return EXIT_SUCCESS;
-}

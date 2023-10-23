@@ -10,6 +10,11 @@ int sq64_to_sq120[64];
 U64 set_mask[64];
 U64 clear_mask[64];
 
+char pce_char[] = ".PNBRQKpnbrqk";
+char side_char[] = "wb-";
+char rank_char[] = "12345678";
+char file_char[] = "abcdefgh";
+
 void initSq120To64() {
 
 	int index = 0;
@@ -35,6 +40,171 @@ void initSq120To64() {
 		}
 	}
 
+}
+
+int parseFen(char *fen, Board *pos) {
+
+	ASSERT(fen!=NULL);
+	ASSERT(pos!=NULL);
+
+	int  rank = RANK_8;
+    int  file = FILE_A;
+    int  piece = 0;
+    int  count = 0;
+    int  i = 0;
+	int  sq64 = 0;
+	int  sq120 = 0;
+
+	resetBoard(pos);
+
+	while ((rank >= RANK_1) && *fen) {
+	    count = 1;
+		switch (*fen) {
+            case 'p': piece = bP; break;
+            case 'r': piece = bR; break;
+            case 'n': piece = bN; break;
+            case 'b': piece = bB; break;
+            case 'k': piece = bK; break;
+            case 'q': piece = bQ; break;
+            case 'P': piece = wP; break;
+            case 'R': piece = wR; break;
+            case 'N': piece = wN; break;
+            case 'B': piece = wB; break;
+            case 'K': piece = wK; break;
+            case 'Q': piece = wQ; break;
+
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+                piece = EMPTY;
+                count = *fen - '0';
+                break;
+
+            case '/':
+            case ' ':
+                rank--;
+                file = FILE_A;
+                fen++;
+                continue;
+
+            default:
+                printf("FEN error \n");
+                return -1;
+        }
+
+		for (i = 0; i < count; i++) {
+            sq64 = rank * 8 + file;
+			sq120 = SQ120(sq64);
+            if (piece != EMPTY) {
+                pos->pieces[sq120] = piece;
+            }
+			file++;
+        }
+		fen++;
+	}
+
+	ASSERT(*fen == 'w' || *fen == 'b');
+
+	pos->side = (*fen == 'w') ? WHITE : BLACK;
+	fen += 2;
+
+	for (i = 0; i < 4; i++) {
+        if (*fen == ' ') {
+            break;
+        }
+		switch(*fen) {
+			case 'K': pos->castle_perm |= WKCA; break;
+			case 'Q': pos->castle_perm |= WQCA; break;
+			case 'k': pos->castle_perm |= BKCA; break;
+			case 'q': pos->castle_perm |= BQCA; break;
+			default:	     break;
+        }
+		fen++;
+	}
+	fen++;
+
+	ASSERT(pos->castle_perm>=0 && pos->castle_perm <= 15);
+
+	if (*fen != '-') {
+		file = fen[0] - 'a';
+		rank = fen[1] - '1';
+
+		ASSERT(file>=FILE_A && file <= FILE_H);
+		ASSERT(rank>=RANK_1 && rank <= RANK_8);
+
+		pos->en_pas = FR2SQ(file,rank);
+    }
+
+	/* pos->pos_key = generatePosKey(pos); */
+
+	/* UpdateListsMaterial(pos); */
+
+	return 0;
+}
+
+void printBoard(const Board *pos) {
+
+	int sq,file,rank,piece;
+
+	printf("\nGame Board:\n\n");
+
+	for(rank = RANK_8; rank >= RANK_1; rank--) {
+		printf("%d  ",rank+1);
+		for(file = FILE_A; file <= FILE_H; file++) {
+			sq = FR2SQ(file,rank);
+			piece = pos->pieces[sq];
+			printf("%3c",pce_char[piece]);
+		}
+		printf("\n");
+	}
+
+	printf("\n   ");
+	for(file = FILE_A; file <= FILE_H; file++) {
+		printf("%3c",'a'+file);
+	}
+	printf("\n");
+	printf("side:%c\n",side_char[pos->side]);
+	printf("enPas:%d\n",pos->en_pas);
+	printf("castle:%c%c%c%c\n",
+			pos->castle_perm & WKCA ? 'K' : '-',
+			pos->castle_perm & WQCA ? 'Q' : '-',
+			pos->castle_perm & BKCA ? 'k' : '-',
+			pos->castle_perm & BQCA ? 'q' : '-'
+			);
+	printf("PosKey:%llX\n",pos->pos_key);
+}
+
+void resetBoard(Board *pos) {
+
+	int index;
+
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		pos->pieces[index] = OFFBOARD;
+	}
+
+	for (index = 0; index < 64; ++index) {
+		pos->pieces[SQ120(index)] = EMPTY;
+	}
+
+	for (index = 0; index < 13; ++index) {
+		pos->pce_num[index] = 0;
+	}
+
+	pos->side = BOTH;
+	pos->en_pas = NO_SQ;
+	pos->fifty_moves = 0;
+
+	pos->ply = 0;
+	pos->his_ply = 0;
+
+	pos->castle_perm = 0;
+
+	pos->pos_key = 0ULL;
 }
 
 const int BitTable[64] = {
