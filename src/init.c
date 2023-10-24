@@ -5,6 +5,8 @@
 #include "board.h"
 #include "init.h"
 #include "hashkeys.h"
+#include "data.h"
+#include "attacks.h"
 
 #define RAND_64 	((U64)rand() | \
 					(U64)rand() << 15 | \

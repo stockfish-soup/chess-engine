@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include "board.h"
 #include "hashkeys.h"
+#include "data.h"
+#include "attacks.h"
 
 int sq120_to_sq64[BRD_SQ_NUM];
 int sq64_to_sq120[64];
@@ -140,11 +142,29 @@ int parseFen(char *fen, Board *pos) {
 		pos->en_pas = FR2SQ(file,rank);
     }
 
+    setBB(pos);
+
 	/* pos->pos_key = generatePosKey(pos); */
 
 	/* UpdateListsMaterial(pos); */
 
 	return 0;
+}
+
+void setBB(Board *pos) {  /* setting the bitboards from the current pieces in the board */
+
+	int index;
+
+	for (index = 0; index < 13; ++index) {
+		pos->BB[index] = 0ULL;
+	}
+
+	for (index = 0; index < BRD_SQ_NUM; ++index) {
+		int sq64 = SQ64(index);
+		if (sq64 != 65) {
+			SETBIT(pos->BB[pos->pieces[index]],sq64);
+		}
+	}
 }
 
 void printBoard(const Board *pos) {
@@ -227,7 +247,7 @@ int countBits(U64 y) {
 	return ((y + (y >> 4)) & 0xf0f0f0f0f0f0f0full) * 0x101010101010101ull >> 56;
 }
 
-void printBitBoard(U64 bb) {
+void printBB(U64 bb) {
 
 	U64 shiftMe = 1ULL;
 	

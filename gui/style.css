@@ -9,3 +9,9 @@
     border-radius: 0px;
     border: 0px solid #4CAF50;
 }
+
+.square_under_attack {
+	background: red;
+    border-radius: 0px;
+    border: 0px solid #4CAF50;
+}

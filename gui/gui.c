@@ -9,7 +9,8 @@
 #include "../src/board.h"
 #include "../src/hashkeys.h"
 #include "../src/init.h"
-
+#include "../src/attacks.h"
+#include "../src/data.h"
 
 GtkWidget *window;
 GtkWidget *fixed1;
@@ -23,6 +24,8 @@ GtkWidget *images[64];
 
 GdkPixbuf *scaled_images[64];
 GdkPixbuf *unscaled_images[64];
+
+char new_fen[] = "8/3qR1pk/2b2p1p/1pQ5/1P6/2P3BP/6PK/3r4 b - - 2 41";
 
 static void myCSS(void){
     GtkCssProvider *provider;
@@ -100,7 +103,7 @@ int main(int argc, char *argv[]) {
 
     allInit();
 
-    parseFen(START_FEN,board);
+    parseFen(new_fen,board);
     printBoard(board);
 
     for (i=0; i<64; i++) {
@@ -144,6 +147,10 @@ int main(int argc, char *argv[]) {
 
         css_set(provider, squares[i],"white_square");
 
+      }
+
+      if (sqAttacked(SQ120(i),board->side,board)) {
+        css_set(provider, squares[i],"square_under_attack");
       }
 
       switch (board->pieces[SQ120(i)]) {
