@@ -7,8 +7,7 @@
 #include "init.h"
 #include "attacks.h"
 #include "data.h"
-
-U64 pawn_attacks[2][64];
+#include "moves.h"
 
 U64 maskPawnAttacks(int sq, int side) {
 
@@ -96,21 +95,5 @@ int sqAttacked(const int sq, const int side, const Board *pos) {   /* sq in 120 
 	}
 	
 	return FALSE;
-
-}
-
-U64 maskPawnAttacks(int sq, int side) {
-
-	U64 bb;
-
-	U64 attacks;
-
-	SETBIT(bb,sq);
-
-	if (!side) {   /* white */
-
-	} 
-
-	return attacks;
 
 }

@@ -7,6 +7,7 @@
 #include "hashkeys.h"
 #include "data.h"
 #include "attacks.h"
+#include "moves.h"
 
 #define RAND_64 	((U64)rand() | \
 					(U64)rand() << 15 | \
@@ -17,6 +18,8 @@
 U64 piece_keys[13][120];
 U64 side_key;
 U64 castle_keys[16];
+int files_brd[BRD_SQ_NUM];
+int ranks_brd[BRD_SQ_NUM];
 
 void initBitMasks() {
 
@@ -51,9 +54,31 @@ void initHashKeys(){
 	}
 }
 
+void initFilesRanksBrd() {
+
+	int index = 0;
+	int file = FILE_A;
+	int rank = RANK_1;
+	int sq = A1;
+
+	for(index = 0; index < BRD_SQ_NUM; ++index) {
+		files_brd[index] = OFFBOARD;
+		ranks_brd[index] = OFFBOARD;
+	}
+
+	for(rank = RANK_1; rank <= RANK_8; ++rank) {
+		for(file = FILE_A; file <= FILE_H; ++file) {
+			sq = FR2SQ(file,rank);
+			files_brd[sq] = file;
+			ranks_brd[sq] = rank;
+		}
+	}
+}
+
 void allInit() {
 	printf("Hello World\n");
 	initSq120To64();
 	initBitMasks();
 	initHashKeys();
+	initFilesRanksBrd();
 }

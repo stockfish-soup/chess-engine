@@ -7,7 +7,7 @@ init.o: init.c
 board.o: board.c
 	gcc -o board.o -c board.c -W -Wall -ansi -pedantic
 
-main.o: main.c board.h init.h hashkeys.h attacks.h data.h
+main.o: main.c 
 	gcc -o main.o -c main.c -W -Wall -ansi -pedantic
 
 hashkeys.o: hashkeys.c

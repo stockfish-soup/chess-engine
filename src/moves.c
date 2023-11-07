@@ -8,20 +8,43 @@
 #include "attacks.h"
 #include "data.h"
 #include "attacks.h"
+#include "moves.h"
 
 
 void printMove(unsigned long move) {
 
-    unsigned int from, to, piece_captured, piece_promoted;
+    unsigned int from, to, captured, promoted;
 
     from = FROMSQ(move);
     to = TOSQ(move);
-    piece_captured = CAPTURED(move);
-    piece_promoted = PROMOTED(move);
+    captured = CAPTURED(move);
+    promoted = PROMOTED(move);
 
     printf("From : %d\n",from);
     printf("To : %d\n",to);
-    printf("Promoted Piece : %d\n",piece_promoted);
-    printf("Captured Piece : %d\n",piece_captured);
+    printf("Promoted Piece : %d\n",promoted);
+    printf("Captured Piece : %d\n",captured);
+
+    static char MvStr[6];
+
+	int ff = files_brd[SQ120(FROMSQ(move))];
+	int rf = ranks_brd[SQ120(FROMSQ(move))];
+	int ft = files_brd[SQ120(TOSQ(move))];
+	int rt = ranks_brd[SQ120(TOSQ(move))];
+
+
+	if(promoted) {
+		char pchar = 'q';
+		if(IsKn(promoted)) {
+			pchar = 'n';
+		} else if(IsRQ(promoted) && !IsBQ(promoted))  {
+			pchar = 'r';
+		} else if(!IsRQ(promoted) && IsBQ(promoted))  {
+			pchar = 'b';
+		}
+		sprintf(MvStr, "%c%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt), pchar);
+	} else {
+		sprintf(MvStr, "%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt));
+	}
 
 }

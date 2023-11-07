@@ -9,6 +9,12 @@
 #define FALSE (0)
 #endif
 
+/* MACROS */
+
+#define IsRQ(p) piece_rook_queen[(p)]
+#define IsBQ(p) piece_bishop_queen[(p)]
+#define IsKn(p) piece_knight[(p)]
+
 /* ENUM */
 
 enum {WHITE,BLACK,BOTH};
@@ -40,10 +46,12 @@ extern const int piece_rook_queen[13];
 extern const int piece_bishop_queen[13];
 extern const int piece_slides[13];
 
-
 extern const int N_dir[8];
 extern const int R_dir[4];
 extern const int B_dir[4];
 extern const int K_dir[8];
+
+extern int files_brd[BRD_SQ_NUM];
+extern int ranks_brd[BRD_SQ_NUM];
 
 #endif

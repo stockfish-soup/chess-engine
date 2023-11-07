@@ -5,6 +5,7 @@
 #include "hashkeys.h"
 #include "data.h"
 #include "attacks.h"
+#include "moves.h"
 
 int sq120_to_sq64[BRD_SQ_NUM];
 int sq64_to_sq120[64];

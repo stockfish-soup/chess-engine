@@ -20,5 +20,7 @@ int main(int argc, char *argv[]){
 	parseFen(START_FEN, board);
 	printBoard(board);
 	printf("%d", sqAttacked(B5, WHITE, board));
+	long amove = 0x34C9;
+	printMove(amove);
 	return EXIT_SUCCESS;
 }
