@@ -5,6 +5,7 @@
 #include "board.h"
 #include "hashkeys.h"
 #include "init.h"
+#include "data.h"
 
 
 U64 generatePosKey(const Board *pos) {

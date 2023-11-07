@@ -11,6 +11,10 @@
 /* FUNCTIONS */
 
 extern U64 maskPawnAttacks(int sq, int side);
+extern U64 maskBishopAttacks(int sq, int side);
+extern U64 maskRookAttacks(int sq, int side);
+extern U64 maskKingAttacks(int sq, int side);
+
 
 extern sqAttacked(const int sq, const int side, const Board *pos);
 

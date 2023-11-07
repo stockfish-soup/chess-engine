@@ -137,7 +137,11 @@ int main(int argc, char *argv[]) {
 
         // gtk_widget_set_name(squares[i], "black_button");
 
-        css_set(provider, squares[i],"black_square");
+        if (sqAttacked(SQ120(i),board->side,board)) {
+          css_set(provider, squares[i],"black_square_under_attack");
+        } else {
+          css_set(provider, squares[i],"black_square");
+        }
 
       } else {
 
@@ -145,12 +149,12 @@ int main(int argc, char *argv[]) {
 
         // gtk_widget_set_name(squares[i], "white_button");
 
-        css_set(provider, squares[i],"white_square");
+        if (sqAttacked(SQ120(i),board->side,board)) {
+          css_set(provider, squares[i],"white_square_under_attack");
+        } else {
+          css_set(provider, squares[i],"white_square");
+        }
 
-      }
-
-      if (sqAttacked(SQ120(i),board->side,board)) {
-        css_set(provider, squares[i],"square_under_attack");
       }
 
       switch (board->pieces[SQ120(i)]) {

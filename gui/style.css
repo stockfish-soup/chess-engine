@@ -10,8 +10,14 @@
     border: 0px solid #4CAF50;
 }
 
-.square_under_attack {
-	background: red;
+.white_square_under_attack {
+	background: #F2A580;
+    border-radius: 0px;
+    border: 0px solid #4CAF50;
+}
+
+.black_square_under_attack {
+	background: #CE532C;
     border-radius: 0px;
     border: 0px solid #4CAF50;
 }

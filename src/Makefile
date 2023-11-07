@@ -1,5 +1,5 @@
-engine: main.o board.o init.o hashkeys.o attacks.o data.o
-	gcc -o engine main.o board.o init.o hashkeys.o attacks.o data.o
+engine: main.o board.o init.o hashkeys.o attacks.o data.o moves.o
+	gcc -o engine main.o board.o init.o hashkeys.o attacks.o data.o moves.o
 
 init.o: init.c
 	gcc -o init.o -c init.c -W -Wall -ansi -pedantic
@@ -18,3 +18,6 @@ attacks.o: attacks.c
 
 data.o: data.c
 	gcc -o data.o -c data.c -W -Wall -ansi -pedantic
+
+moves.o: moves.c
+	gcc -o moves.o -c moves.c -W -Wall -ansi -pedantic

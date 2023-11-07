@@ -7,6 +7,7 @@
 #include "hashkeys.h"
 #include "data.h"
 #include "attacks.h"
+#include "moves.h"
 
 int main(int argc, char *argv[]){
 	allInit();

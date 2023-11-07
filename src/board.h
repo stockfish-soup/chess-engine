@@ -85,6 +85,8 @@ typedef struct {
 #define CNT(b) countBits(b)
 #define CLRBIT(bb,sq) ((bb) &= clear_mask[(sq)])
 #define SETBIT(bb,sq) ((bb) |= set_mask[(sq)])
+#define RANK(sq) ((sq) >> 3) /* in 64, div 8 */
+#define FILE(sq) ((sq) & 7) /* in 64, modulo 8 */
 
 /* GLOBALS */
 
