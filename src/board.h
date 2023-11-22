@@ -3,9 +3,6 @@
 
 typedef unsigned long long int U64;
 
-#define BRD_SQ_NUM 120
-#define MXGAMEMOVES 2048
-
 #define START_FEN  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 #ifndef TRUE
@@ -15,6 +12,11 @@ typedef unsigned long long int U64;
 #ifndef FALSE
 #define FALSE (0)
 #endif
+
+#ifndef BRD_SQ_NUM
+#define BRD_SQ_NUM 120
+#endif
+
 
 #define ASSERT(n) \
 if(!(n)) { \
@@ -70,23 +72,36 @@ typedef struct {
 
 /* GAME MOVE */
 
-typedef struct {
-
-
-
-} Move;
-
 /* MACROS */
 
 #define FR2SQ(f,r) ( (21 + (f) ) + ( (r) * 10) ) 
 #define SQ64(sq120) (sq120_to_sq64[(sq120)])
 #define SQ120(sq64) (sq64_to_sq120[(sq64)])
-#define POP(b) popBit(b)
+#define POP(b) popBit(&b)
+
 #define CNT(b) countBits(b)
+
+#ifdef __GNUC__
+/* Use GCC's built-in popcount for GCC compiler */
+#define CNT(value) __builtin_popcountll(value)
+#elif defined(_MSC_VER)
+/* Use MSVC's popcnt64 for MSVC compiler */
+#include <intrin.h>
+#define CNT(value) __popcnt64(value)
+#else
+/* Use a custom implementation for other compilers */
+int countBits(uint64_t value) {
+	y -= ((y >> 1) & 0x5555555555555555ull);
+	y = (y & 0x3333333333333333ull) + (y >> 2 & 0x3333333333333333ull);
+	return ((y + (y >> 4)) & 0xf0f0f0f0f0f0f0full) * 0x101010101010101ull >> 56;
+}
+#define CNT(value) countBits(value)
+#endif
+
 #define CLRBIT(bb,sq) ((bb) &= clear_mask[(sq)])
 #define SETBIT(bb,sq) ((bb) |= set_mask[(sq)])
-#define RANK(sq) ((sq) >> 3) /* in 64, div 8 */
-#define FILE(sq) ((sq) & 7) /* in 64, modulo 8 */
+#define RANK(sq) ((sq) >> 3) /* in 64, div 8 (sq120) */
+#define FILE(sq) ((sq) & 7) /* in 64, modulo (sq120) */
 
 /* GLOBALS */
 
@@ -101,18 +116,22 @@ extern char side_char[];
 extern char file_char[];
 extern char rank_char[];
 
+extern const U64 not_a_file;
+extern const U64 not_h_file;
+
 /* FUNCTIONS */
 
 extern void initSq120To64();
 extern void resetBoard(Board *pos);
 extern void printBoard(const Board *pos);
 extern int parseFen(char *fen, Board *pos); /* sets up board from fen */
-extern void setBB(Board *pos);
 
 /* BitBoards */
 
-extern void printBitBoard(U64 bb); /* prints 'X' if 1 and  '_' if 0 */
-extern int popBit(U64 *bb); /* replaces the first 1 bit to 0 */
-extern int countBits(U64 b); /* counts total number of 1 bits */
+extern void printBB(const U64 bb); /* prints 'X' if 1 and '_' if 0 */
+extern void setBB(Board *pos);
+extern int popBit(U64 *bb); /* replaces the first 1 bit to 0 and returns the index */
+extern U64 setOccupancy(int index, int bits_in_mask, U64 attack_mask);
+
 
 #endif

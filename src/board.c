@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <strings.h>
 #include "board.h"
 #include "hashkeys.h"
 #include "data.h"
@@ -17,6 +18,9 @@ char pce_char[] = ".PNBRQKpnbrqk";
 char side_char[] = "wb-";
 char rank_char[] = "12345678";
 char file_char[] = "abcdefgh";
+
+const U64 not_a_file = 18374403900871474942ULL; /*everything but the a file*/
+const U64 not_h_file = 9187201950435737471ULL; /*everything but the h file*/
 
 void initSq120To64() {
 
@@ -242,13 +246,7 @@ int popBit(U64 *bb) {
   return BitTable[(fold * 0x783a9b23) >> 26];
 }
 
-int countBits(U64 y) {
-	y -= ((y >> 1) & 0x5555555555555555ull);
-	y = (y & 0x3333333333333333ull) + (y >> 2 & 0x3333333333333333ull);
-	return ((y + (y >> 4)) & 0xf0f0f0f0f0f0f0full) * 0x101010101010101ull >> 56;
-}
-
-void printBB(U64 bb) {
+void printBB(const U64 bb) {
 
 	U64 shiftMe = 1ULL;
 	
@@ -258,6 +256,7 @@ void printBB(U64 bb) {
 	int sq64 = 0;
 	
 	printf("\n");
+
 	for(rank = RANK_8; rank >= RANK_1; --rank) {
 		for(file = FILE_A; file <= FILE_H; ++file) {
 			sq = FR2SQ(file,rank);
@@ -272,4 +271,22 @@ void printBB(U64 bb) {
 		printf("\n");
 	}  
     printf("\n\n");
+}
+
+U64 setOccupancy(int index, int bits_in_mask, U64 attack_mask) {
+
+	U64 occupancy = 0ULL;
+	int count, sq;
+
+	for (count = 0; count < bits_in_mask; count ++) {
+
+		sq = ffsll(attack_mask);
+		sq = POP(attack_mask);
+
+		if (index & (1 << count)) occupancy |= (1ULL << sq);
+
+	}
+
+	return occupancy;
+
 }

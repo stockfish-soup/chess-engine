@@ -21,6 +21,17 @@ U64 castle_keys[16];
 int files_brd[BRD_SQ_NUM];
 int ranks_brd[BRD_SQ_NUM];
 
+U64 pawn_attacks[2][64];
+U64 knight_attacks[64];
+U64 bishop_attacks[64];
+U64 rook_attacks[64];
+U64 king_attacks[64];
+
+unsigned int rook_magic_numbers[64];
+unsigned int bishop_magic_numbers[64];
+
+unsigned int state = 8548319552;
+
 void initBitMasks() {
 
 	int index = 0;
@@ -75,10 +86,38 @@ void initFilesRanksBrd() {
 	}
 }
 
+void initLeaperAttacks() {
+
+	int sq; /* sq64 */
+
+	for (sq = 0; sq < 64; sq++) {
+		
+		pawn_attacks[WHITE][sq] = maskPawnAttacks(sq, WHITE);
+		pawn_attacks[BLACK][sq] = maskPawnAttacks(sq, BLACK);
+
+		knight_attacks[sq] = maskKnightAttacks(sq);
+		king_attacks[sq] = maskKingAttacks(sq);
+
+	}
+
+}
+
+void initMagicNumbers() {
+
+	int sq;
+	
+	for (sq = 0; sq < 64; sq++) printf("0x%lluxULL\n", findMagicNumber(sq, bishop_relevant_bits[sq], 1)); /* init magic numbers for bishop */
+	for (sq = 0; sq < 64; sq++) printf("0x%lluxULL\n", findMagicNumber(sq, bishop_relevant_bits[sq], 0)); /* init magic numbers for rook */
+
+
+}
+
 void allInit() {
 	printf("Hello World\n");
 	initSq120To64();
 	initBitMasks();
 	initHashKeys();
 	initFilesRanksBrd();
+	initLeaperAttacks();
+	initMagicNumbers();
 }

@@ -14,8 +14,8 @@
 
 #define FROMSQ(m) ((m) & 0x3F)
 #define TOSQ(m) (((m) >> 6) & 0x3F)
-#define CAPTURED(m) (((m) >> 12) & 0x3F)
-#define PROMOTED(m) (((m) >> 16) & 0x3F)
+#define CAPTURED(m) (((m) >> 12) & 0xF)
+#define PROMOTED(m) (((m) >> 16) & 0xF)
 
 /* FUNCTIONS */
 

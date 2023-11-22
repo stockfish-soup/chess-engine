@@ -32,7 +32,6 @@ void printMove(unsigned long move) {
 	int ft = files_brd[SQ120(TOSQ(move))];
 	int rt = ranks_brd[SQ120(TOSQ(move))];
 
-
 	if(promoted) {
 		char pchar = 'q';
 		if(IsKn(promoted)) {
@@ -46,5 +45,7 @@ void printMove(unsigned long move) {
 	} else {
 		sprintf(MvStr, "%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt));
 	}
+
+    printf(MvStr);
 
 }

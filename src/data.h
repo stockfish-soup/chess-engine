@@ -15,6 +15,11 @@
 #define IsBQ(p) piece_bishop_queen[(p)]
 #define IsKn(p) piece_knight[(p)]
 
+/* GLOBALS */
+
+#define BRD_SQ_NUM 120
+#define MXGAMEMOVES 2048
+
 /* ENUM */
 
 enum {WHITE,BLACK,BOTH};

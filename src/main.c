@@ -10,17 +10,8 @@
 #include "moves.h"
 
 int main(int argc, char *argv[]){
+	
 	allInit();
-	U64 bb = 0;
-	SETBIT(bb,2);
-	printf("%d",countBits(bb));
-	printBB(bb);
-	Board board[1];
-	resetBoard(board);
-	parseFen(START_FEN, board);
-	printBoard(board);
-	printf("%d", sqAttacked(B5, WHITE, board));
-	long amove = 0x34C9;
-	printMove(amove);
+
 	return EXIT_SUCCESS;
 }

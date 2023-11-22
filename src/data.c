@@ -1,4 +1,5 @@
 #include "data.h"
+#include "board.h"
 
 const int piece_val[13] = { 0, 100, 305, 333, 563, 950, 50000, 100, 305, 333, 563, 95, 50000  };
 const int piece_col[13] = { BOTH, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE,
